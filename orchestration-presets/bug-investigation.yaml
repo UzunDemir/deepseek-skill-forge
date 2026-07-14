@@ -1,0 +1,38 @@
+name: bug-investigation
+description: "Investigate a production bug: trace code paths + reproduce + fix"
+version: 1
+
+steps:
+  - id: code-mapper
+    type: spawn
+    template: spawn-templates/01-core-development/code-mapper.json
+    parallel_group: investigation
+    input:
+      scope: "Trace all files owning the broken behavior"
+
+  - id: debugger
+    type: spawn
+    template: spawn-templates/04-quality-security/debugger.json
+    parallel_group: investigation
+    input:
+      error: "from user's error description"
+
+  - id: wait
+    wait_for:
+      - code-mapper
+      - debugger
+
+  - id: backend-developer
+    type: skill
+    skill: skills/01-core-development/backend-developer
+    condition: "if root cause is backend"
+
+  - id: frontend-developer
+    type: skill
+    skill: skills/01-core-development/frontend-developer
+    condition: "if root cause is frontend"
+
+  - id: security-auditor
+    type: spawn
+    template: spawn-templates/04-quality-security/security-auditor.json
+    condition: "if fix touches auth/permission paths"

@@ -1,0 +1,16 @@
+---
+name: symfony-specialist
+version: 1
+
+produces:
+  type: change-set
+  description: "See SKILL.md Return section for full structure"
+
+consumes:
+  type: task-context
+  required: true
+  description: "The task scope, codebase state, and expected outcome"
+
+parallel_compatible: []
+conflicts_with: []
+---

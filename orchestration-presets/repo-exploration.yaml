@@ -1,0 +1,37 @@
+name: repo-exploration
+description: "Explore an unfamiliar codebase: search + map + synthesize"
+version: 1
+
+steps:
+  - id: search-specialist
+    type: spawn
+    template: spawn-templates/10-research-analysis/search-specialist.json
+    parallel_group: explore
+    input:
+      query: "Find all entry points, routes, and module boundaries for {domain}"
+
+  - id: code-mapper
+    type: spawn
+    template: spawn-templates/01-core-development/code-mapper.json
+    parallel_group: explore
+    input:
+      scope: "Map ownership boundaries for {domain}"
+
+  - id: docs-researcher
+    type: spawn
+    template: spawn-templates/10-research-analysis/docs-researcher.json
+    parallel_group: explore
+    input:
+      question: "What documentation exists for this codebase?"
+
+  - id: wait
+    wait_for:
+      - search-specialist
+      - code-mapper
+      - docs-researcher
+
+  - id: knowledge-synthesizer
+    type: skill
+    skill: skills/09-meta-orchestration/knowledge-synthesizer
+    input:
+      merge: "Combine findings into a structured overview of {domain}"

@@ -1,0 +1,42 @@
+name: pr-review-chain
+description: "Parallel PR review with correctness + docs verification + codebase search"
+version: 1
+
+steps:
+  - id: reviewer
+    type: spawn
+    template: spawn-templates/04-quality-security/reviewer.json
+    parallel_group: A
+    input:
+      scope: "full diff"
+
+  - id: docs-researcher
+    type: spawn
+    template: spawn-templates/10-research-analysis/docs-researcher.json
+    parallel_group: A
+    input:
+      question: "Verify API docs match the changed endpoints"
+
+  - id: search-specialist
+    type: spawn
+    template: spawn-templates/10-research-analysis/search-specialist.json
+    parallel_group: A
+    input:
+      query: "Find similar patterns in codebase for the changed behavior"
+
+  - id: wait
+    wait_for:
+      - reviewer
+      - docs-researcher
+      - search-specialist
+
+  - id: synthesize
+    type: inline
+    instruction: |
+      Merge findings from all three sub-agents.
+      Conflict resolution: security > correctness > style.
+      Output unified PR review with:
+        - files changed
+        - findings by severity (critical/high/medium/low)
+        - recommendations
+        - residual risk

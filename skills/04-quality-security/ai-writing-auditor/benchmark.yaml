@@ -1,0 +1,18 @@
+---
+name: ai-writing-auditor
+version: 1
+
+tests:
+  - id: default
+    prompt: "Perform your role as ai-writing-auditor. Context: Use when a task needs prose to be checked for AI writing patterns and rewritten to sound natural and human."
+    expected:
+      return_contract: true
+      checks:
+        - "returns structured output matching SKILL.md Return section"
+        - "validates at least one success path"
+        - "validates at least one failure path"
+        - "does not exceed scope boundaries"
+    eval:
+      method: llm-as-judge
+      pass_threshold: 0.8
+---

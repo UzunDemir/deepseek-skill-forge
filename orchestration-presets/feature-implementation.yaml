@@ -1,0 +1,26 @@
+name: feature-implementation
+description: "End-to-end feature: fullstack developer + reviewer"
+version: 1
+
+steps:
+  - id: fullstack-developer
+    type: skill
+    skill: skills/01-core-development/fullstack-developer
+    input:
+      scope: "as described in the task"
+
+  - id: reviewer
+    type: spawn
+    template: spawn-templates/04-quality-security/reviewer.json
+    condition: "after implementation"
+    depends_on: [fullstack-developer]
+    input:
+      scope: "fullstack-developer's diff"
+
+  - id: docs-researcher
+    type: spawn
+    template: spawn-templates/10-research-analysis/docs-researcher.json
+    condition: "if API contract changed"
+    depends_on: [fullstack-developer]
+    input:
+      question: "Verify API docs match implementation"

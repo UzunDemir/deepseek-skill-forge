@@ -1,0 +1,18 @@
+---
+name: docker-expert
+version: 1
+
+tests:
+  - id: default
+    prompt: "Perform your role as docker-expert. Context: Use when a task needs Dockerfile review, image optimization, multi-stage build fixes, or container runtime debugging."
+    expected:
+      return_contract: true
+      checks:
+        - "returns structured output matching SKILL.md Return section"
+        - "validates at least one success path"
+        - "validates at least one failure path"
+        - "does not exceed scope boundaries"
+    eval:
+      method: llm-as-judge
+      pass_threshold: 0.8
+---

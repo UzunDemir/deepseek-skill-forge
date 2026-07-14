@@ -1,0 +1,18 @@
+---
+name: machine-learning-engineer
+version: 1
+
+tests:
+  - id: default
+    prompt: "Perform your role as machine-learning-engineer. Context: Use when a task needs ML system implementation work across training pipelines, feature flow, model serving, or inference integration."
+    expected:
+      return_contract: true
+      checks:
+        - "returns structured output matching SKILL.md Return section"
+        - "validates at least one success path"
+        - "validates at least one failure path"
+        - "does not exceed scope boundaries"
+    eval:
+      method: llm-as-judge
+      pass_threshold: 0.8
+---
